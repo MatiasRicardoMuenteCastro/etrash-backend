@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
 const fs = require('fs');
 const path = require('path');
+const mailer = require('../modules/mailer');
 
 function hash(password){
 	const saltRounds = 12;
@@ -36,7 +37,8 @@ module.exports = {
     },
    	
    	create: async (request, response) => {
-        const {name, 
+        const {name,
+              email, 
               passwordInput, 
               discarts, 
               rua, 
@@ -51,7 +53,14 @@ module.exports = {
         .first();
 
         if(nameDB){
-            return response.status(401).json({error:"Nome de ponto já está cadastrado"});
+            return response.status(401).json({error:"Nome do ponto já está cadastrado"});
+        }
+
+        const emailDB = await connection('discarts_points').where('email',email).select('email')
+        .first();
+
+        if(emailDB){
+            return response.status(401).json({error:"Email do ponto já cadastrado."});
         }
 
         const password = hash(passwordInput);
@@ -60,6 +69,7 @@ module.exports = {
         await connection('discarts_points').insert({
             id,
             name,
+            email,
             password,
             discarts,
             rua,
@@ -138,6 +148,83 @@ module.exports = {
         }); 
         return response.json({sucess:"Imagem carregada com sucesso!" });
     
-    }
+    },
+    recovery: async(req,res) =>{
+		const {email} = req.body;
+		try{
+			const findEmail = await connection('discarts_points').where('email',email).select('name')
+			.first();
+
+			if(!findEmail)
+				return res.status(400).json({error: "Ponto de descarto não encontrado."});
+
+			const token = crypto.randomBytes(20).toString('HEX');
+
+			const now = new Date();
+			now.setHours(now.getHours()+1);
+
+			await connection('discarts_points').where('email',email).update({
+				password_reset_token: token,
+				password_reset_expires: now
+			});
+
+			mailer.sendMail({
+				to: email,
+				from:'etrash@outlook.com.br',
+				template:'auth/forgot_password',
+				context: {token}
+			},(err)=>{
+				if(err){
+					return res.status(400).json({error: "Erro ao enviar o email."})
+				}
+				return res.send();
+			});
+
+		}catch(err){
+			res.status(400).json({error: "Erro ao recuperar a senha, tente de novo."});
+        }
+        
+    },
+    reset: async(req,res)=>{
+		const {email,token,password} = req.body;
+		try{
+			
+			const findEmail = await connection('discarts_points').where('email',email).select('email')
+			.first();
+
+			if(!findEmail){
+				return res.status(400).json({error: "Email não encontrado"});
+			}
+
+			const findResetToken = await connection('discarts_points').where('email',email).select('password_reset_token')
+			.first();
+
+			if(token !== findResetToken.password_reset_token){
+				return res.status(400).json({error:"Chave para resetar a senha é inválida."});
+			}
+
+			const findResetExpires = await connection('discarts_points').where('email',email).select('password_reset_expires')
+			.first();
+
+			const now = new Date();
+
+			if(now > findResetExpires){
+				return res.status(400).json({error:"Sua chave para resetar a senha expirou, pegue uma nova."});
+			}
+
+			const passwordCrypt = hash(password);
+
+			await connection('discarts_points').where('email',email).update({
+				password: passwordCrypt,
+				password_reset_token: null,
+				password_reset_expires: null
+			});
+
+			return res.send("Senha resetada com sucesso.");
+
+		}catch(err){
+			return res.status(400).json({error:"Erro ao resetar a senha."});
+		}
+	}
 
 }    
