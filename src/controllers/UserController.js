@@ -73,11 +73,17 @@ module.exports = {
 			latitude,
 			longitude
 		});
-		return res.json({'Bem-Vindo': name, id: id,  token: generateToken({id: id})});
+		return res.json({
+			welcome: `Bem vindo(a) ${name}`, 
+			id: id,  
+			name: name,
+			email: email,
+			token: generateToken({id: id})
+		});
 	},
 
 	delete: async (req, res) => {
-		const userId = req.headers.identification;
+		const userId = req.headers.authorization;
 		const { passwordInput } = req.body;
 
 		const userIDDB = await connection('users').where('id', userId)
@@ -113,7 +119,7 @@ module.exports = {
 	},
 	
 	upload: async (req, res) => {
-		const userId = req.headers.identification;
+		const userId = req.headers.authorization;
 		const userIDDB = await connection('users').where('id', userId)
 		.select('id').first();
 

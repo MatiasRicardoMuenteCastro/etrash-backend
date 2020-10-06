@@ -8,7 +8,7 @@ const UserController = require('./controllers/UserController');
 const PointController = require('./controllers/PointController');
 const DiscartController = require('./controllers/DiscartController');
 const ProfileController = require('./controllers/ProfileController');
-const botController = require('./watson chat/botController');
+const botController = require('./controllers/botController');
 const noticesController = require('./controllers/NoticesController');
 
 const authMiddleware = require('./middlewares/auth');
@@ -35,10 +35,13 @@ routesAuth.post('/point/upload', multer(MulterPoints).single('file'), PointContr
 routesAuth.get('/point', PointController.index);
 routesAuth.delete('/point/delete', PointController.delete);
 
-routesAuth.put('/discarts/user', DiscartController.userCreate);
-routesAuth.put('/discarts/company', DiscartController.companyCreate);
-routesAuth.put('/discarts/point', DiscartController.pointCreate);
-routesAuth.get('/discarts/points', DiscartController.searchPointForUser);
+routesAuth.put('/discarts/user/update', DiscartController.userUpdate);
+routesAuth.put('/discarts/company/update', DiscartController.companyUpdate);
+routesAuth.put('/discarts/point/update', DiscartController.pointUpdate);
+routesAuth.get('/discarts/user', DiscartController.userGet);
+routesAuth.get('/discarts/company', DiscartController.companyGet);
+routesAuth.get('/discarts/points', DiscartController.pointGet);
+routesAuth.get('/discarts/points/search', DiscartController.searchPointForUser);
 
 routesAuth.get('/profile/user', ProfileController.userProfile);
 routesAuth.post('/profile/user/avatar', multer(MulterUsers).single('file'), ProfileController.updateUserAvatar);
@@ -48,6 +51,6 @@ routesAuth.get('/profile/point', ProfileController.pointProfile);
 routesAuth.post('/profile/point/avatar', multer(MulterPoints).single('file'), ProfileController.updatePointAvatar);
 
 routesAuth.post('/watson/send',botController.sendChat);
-routesAuth.get('/notices/get',noticesController.get);
+routesAuth.get('/news/get',noticesController.get);
 
 module.exports = routesAuth;

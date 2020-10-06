@@ -101,15 +101,19 @@ module.exports = {
         });
 
         return response.json({
-            sucess: "Companhia cadastrada com sucesso",
+            welcome: `Bem vindo: ${name}`,
             id: id,
+            email: email,
+            name: name,
+            phone: phone,
+            activity: activity,
             token: generateToken({id: id})
         });
     
     },
     
     async delete(request, response){
-        const companyId = request.headers.identification;
+        const companyId = request.headers.authorization;
         const { passwordInput } = request.body;
 
         const companyIdBD = await connection('companies').where('id', companyId)
@@ -151,7 +155,7 @@ module.exports = {
     },
     
     async upload(request, response){
-        const companyId = request.headers.identification;
+        const companyId = request.headers.authorization;
         const companyIDDB = await connection('companies').where('id', companyId)
         .select('id').first();
 
@@ -176,7 +180,7 @@ module.exports = {
     },
 
     async scheduling(request, response){
-        const company_id = request.headers.identification;
+        const company_id = request.headers.authorization;
         const { nameCollector, date } = request.body;
         const companyDB = await connection('companies').where('id', company_id)
         .select('id').first();
@@ -207,7 +211,7 @@ module.exports = {
     },
 
     async schedule(request, response){
-        const company_id = request.headers.identification;
+        const company_id = request.headers.authorization;
         const idCompanyDB = await connection('companies').where('id', company_id)
         .select('id').first();
 
@@ -236,7 +240,7 @@ module.exports = {
         return response.json({solicitations, companySolicitation});
     },
     async scheduleDelete(request, response){
-        const id = request.headers.identification;
+        const id = request.headers.authorization;
 
         const idDB = await connection('companies').select('id').where('id',id).first();
         

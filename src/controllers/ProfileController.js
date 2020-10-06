@@ -6,7 +6,7 @@ const fs = require('fs');
 module.exports = {
 
 	userProfile: async (req, res) => {
-		const userId = req.headers.identification;		
+		const userId = req.headers.authorization;		
 		const matchIdUser = await connection('users').where('id', userId)
 		.select('id').first();
 
@@ -40,7 +40,7 @@ module.exports = {
 	},
 
 	updateUserAvatar: async (req, res) => {
-		const userId = req.headers.identification;
+		const userId = req.headers.authorization;
 		const userDB = await connection('users').where('id', userId)
 		.select('id').first();
 
@@ -70,7 +70,7 @@ module.exports = {
 	},
 
 	companyProfile: async (req, res) => {
-		const companyId = req.headers.identification;		
+		const companyId = req.headers.authorization;	
 		const matchIdCompany = await connection('companies').where('id', companyId)
 		.select('id').first();
 
@@ -108,7 +108,7 @@ module.exports = {
 	},
 
 	updateCompanyAvatar: async (req, res) => {
-		const companyId = req.headers.identification;
+		const companyId = req.headers.authorization; 
 		const companyDB = await connection('companies').where('id', companyId)
 		.select('id').first();
 
@@ -138,7 +138,7 @@ module.exports = {
 
 
 	pointProfile: async (req, res) => {
-		const pointId = req.headers.identification;		
+		const pointId = req.headers.authorization;		
 		const matchIdPoint = await connection('discarts_points').where('id', pointId)
 		.select('id').first();
 
@@ -161,19 +161,19 @@ module.exports = {
 		var pointAvatarDir = await connection('uploads').where('point_id', pointId)
 		.select('key').first();
 
-		const pointAvatar = path.resolve(`../../temp/uploads/points/${pointAvatarDir.key}`);
-
 		if (!pointAvatarDir) {
 			pointAvatarDir = null;
 			return res.json({point, pointAvatarDir});
 		}
+
+		const pointAvatar = path.resolve(`../../temp/uploads/points/${pointAvatarDir.key}`);
 
 		return res.json({point, pointAvatar});
 
 	},
 
 	updatePointAvatar: async (req, res) => {
-		const pointId = req.headers.identification;
+		const pointId = req.headers.authorization; 
 		const pointDB = await connection('discarts_points').where('id', pointId)
 		.select('id').first();
 

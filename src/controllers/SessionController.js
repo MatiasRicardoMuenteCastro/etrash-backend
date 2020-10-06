@@ -5,42 +5,45 @@ const authConfig = require('../config/auth');
 
 
 function generateToken(params = {}){
-	return jwt.sign(params, authConfig.secret,{
+    return jwt.sign(params, authConfig.secret,{
         expiresIn:86400,
-	});
+    });
 }
 
 module.exports = {
-	
+    
     userCreate: async (req, res) => {
-		const {name, passwordInput, localLat, localLon} = req.body;
-        const userIDDB = await connection('users').where('name', name).select('id').first();
-		
-		if(!userIDDB){
-			return res.status(400).json({error: 'Usuário não encontrado'});
-        }
-        
-        const passwordDB = await connection('users').where('id', userIDDB.id)
-		.select('password').first();
+        const {email, passwordInput, localLat, localLon} = req.body;
+        const userIDDB = await connection('users').where('email', email).select('id').first();
 
-		const passwordMatch = await bcrypt.compareSync(passwordInput, passwordDB.password);
-		
-		if (!passwordMatch) {
-			return res.status(400).json({error: 'Senha incorreta'});
-		}
+        const passwordDB = await connection('users').where('id', userIDDB.id)
+        .select('password').first();
+        
+        if(!userIDDB){
+            return res.status(400).json({error: 'Usuário não encontrado'});
+        }
+
+        const passwordMatch = await bcrypt.compareSync(passwordInput, passwordDB.password);
+        
+        if (!passwordMatch) {
+            return res.status(400).json({error: 'Senha incorreta'});
+        }
+
+        const userName = await connection('users').where('id', userIDDB.id).select('name').first();
 		
 		await connection('users').where('id', userIDDB.id).update({latitude: localLat, longitude: localLon });
 		return res.json({
             id: userIDDB.id,
-            user: name,
+            user: userName.name,
+            email: email,
             token: generateToken({id: userIDDB.id})
         });
 
-	},
+    },
 
-	companyCreate: async (req, res) => {
-        const {name, passwordInput, localLat, localLon} = req.body;
-        const companyID = await connection('companies').where('name', name).select('id')
+    companyCreate: async (req, res) => {
+        const {email, passwordInput, localLat, localLon} = req.body;
+        const companyID = await connection('companies').where('email', email).select('id')
         .first();
 
         if (!companyID) {
@@ -56,18 +59,21 @@ module.exports = {
             return res.status(400).json({error: 'Senha Inválida'});
         }
 
+        const companyName = await connection('companies').where('id', companyID.id).select('name').first();
+
         await connection('companies').where('id', companyID.id).update({latitude: localLat, longitude: localLon });
         return res.json({
             id: companyID.id,
-            company: name,
+            company: companyName.name,
+            email: email,
             token: generateToken({id: companyID.id})
         });
 
-	},
+    },
 
-	pointCreate: async (req, res) => {
-        const {name, passwordInput, localLat, localLon} = req.body;
-        const pointID = await connection('discarts_points').where('name', name).select('id')
+    pointCreate: async (req, res) => {
+        const {email, passwordInput, localLat, localLon} = req.body;
+        const pointID = await connection('discarts_points').where('email', email).select('id')
         .first();
 
         if (!pointID) {
@@ -82,12 +88,15 @@ module.exports = {
         if (!passwordMatch) {
             return res.status(400).json({error: 'Senha Inválida'});
         }
+        const pointName = await connection('discarts_points').where('id',pointID.id).select('name').first();
 
         await connection('discarts_points').where('id', pointID.id).update({latitude: localLat, longitude: localLon });
+
         return res.json({
             id: pointID.id,
-            point: name,
+            name: pointName.name,
+            email: email,
             token: generateToken({id: pointID.id})
         });
-	}
+    }
 };

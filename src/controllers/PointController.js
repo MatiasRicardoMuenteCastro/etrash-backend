@@ -82,15 +82,17 @@ module.exports = {
         });
         
         return response.json({
-            sucess: "Ponto registrado com sucesso!",
+            welcome: `Bem-vindo(a) Ponto de Coleta ${name}`,
             id: id,
+            name: name,
+            discarts: discarts,
             token: generateToken({id: id})
         });
 
     },
     
     delete: async (request, response) => {
-        const point_id = request.headers.identification;
+        const point_id = request.headers.authorization;
         const { passwordInput } = request.body;
         const idSearch = await connection('discarts_points').where('id', point_id).select('id')
         .first();
@@ -126,7 +128,7 @@ module.exports = {
     },
     
     upload: async(request, response) => {
-        const point_id = request.headers.identification;
+        const point_id = request.headers.authorization;
         const pointIDDB = await connection('discarts_points').where('id', point_id)
         .select('id').first();
 
