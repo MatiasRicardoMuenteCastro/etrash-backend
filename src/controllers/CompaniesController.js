@@ -60,6 +60,12 @@ module.exports = {
               region,
               latitude,
               longitude } = request.body;
+        
+        const findCNPJ = await connection('companies').where('cnpj',cnpj).select('cnpj').first();
+
+        if(findCNPJ){
+            return response.status(401).json({error:"CNPJ de companhia já existente."});
+        }
 
         const id = crypto.randomBytes(5).toString("HEX");
         const password = hash(passwordInput);
@@ -153,6 +159,51 @@ module.exports = {
         await connection('companies').where('id', companyIdBD.id).delete();
         return response.send();
     },
+    
+    updateData: async(req,res)=>{
+		const {
+			name,
+			email,
+			country,
+			city,
+            region,
+            neightborhood,
+            phone,
+			latitude,
+			longitude
+			} = req.body;
+			
+			const companyId = req.headers.authorization;
+            const companyIDDB = await connection('companies').select('id').where('id',companyId).first();
+
+			if(!companyIDDB){
+				return res.status(401).json({error:"Usuario não encontrado"});
+			}
+
+			const companyFields = [name,email,country,city,region,neightborhood,phone,latitude,longitude];
+
+		 	const items = companyFields.map(function(item){
+				 if(item !== ""){
+					 return item;
+				 }
+			 });
+
+			const [varName,varEmail,varCountry,varCity,varRegion,varNeightborhood,varPhone,varLatitude,varLongitude] = items;
+			
+			await connection('companies').where('id',companyIDDB.id).update({
+				name:varName,
+				email:varEmail,
+				country:varCountry,
+				city:varCity,
+                region:varRegion,
+                neightborhood:varNeightborhood,
+                phone:varPhone,
+				latitude:varLatitude,
+				longitude:varLongitude
+			});
+			
+			return res.json({sucess: "Informações da companhia atualizadas com sucesso."});
+	},
     
     async upload(request, response){
         const companyId = request.headers.authorization;
@@ -250,7 +301,7 @@ module.exports = {
 
         await connection('schedule').where('company_id',idDB.id).delete();
 
-        return response.status(200).send('Agendamento deletado com sucesso!');
+        return response.status(200).json({sucess:'Agendamento deletado com sucesso!'});
         
     },
     recovery: async(req,res) =>{
@@ -323,7 +374,7 @@ module.exports = {
 				password_reset_expires: null
             });
 
-			return res.send("Senha resetada com sucesso.");
+			return res.send({sucess:"Senha resetada com sucesso."});
 
 		}catch(err){
 			return res.status(400).json({error:"Erro ao resetar a senha."});

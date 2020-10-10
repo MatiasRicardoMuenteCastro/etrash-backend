@@ -126,6 +126,51 @@ module.exports = {
         
         return response.send();
     },
+
+    updateData: async(req,res)=>{
+		const {
+			name,
+            email,
+            street,
+            number,
+			country,
+			city,
+			region,
+			latitude,
+			longitude
+			} = req.body;
+			
+			const pointId = req.headers.authorization;
+			const pointIDDB = await connection('discarts_points').select('id').where('id',pointId).first();
+
+			if(!pointIDDB){
+				return res.status(401).json({error:"Usuario não encontrado"});
+			}
+
+			const pointFields = [name,email,street,number,country,city,region,latitude,longitude];
+
+		 	const items = pointFields.map(function(item){
+				 if(item !== ""){
+					 return item;
+				 }
+			 });
+
+			const [varName,varEmail,varStreet,varNumber,varCountry,varCity,varRegion,varLatitude,varLongitude] = items;
+			
+			await connection('discarts_points').where('id',pointIDDB.id).update({
+				name:varName,
+                email:varEmail,
+                rua:varStreet,
+                numero:varNumber,
+				country:varCountry,
+				city:varCity,
+				region:varRegion,
+				latitude:varLatitude,
+				longitude:varLongitude
+			});
+			
+			return res.json({sucess: "Informações do ponto de coleta atualizadas com sucesso."});
+	},
     
     upload: async(request, response) => {
         const point_id = request.headers.authorization;
@@ -222,7 +267,7 @@ module.exports = {
 				password_reset_expires: null
 			});
 
-			return res.send("Senha resetada com sucesso.");
+			return res.send({sucess:"Senha resetada com sucesso."});
 
 		}catch(err){
 			return res.status(400).json({error:"Erro ao resetar a senha."});

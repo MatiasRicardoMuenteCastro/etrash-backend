@@ -23,6 +23,7 @@ routesAuth.use(morgan('dev'));
 routesAuth.post('/users/upload', multer(MulterUsers).single('file'), UserController.upload);
 routesAuth.get('/users', UserController.index);
 routesAuth.delete('/users/delete', UserController.delete);
+routesAuth.put('/users/update',UserController.updateData);
 
 routesAuth.post('/companies/upload', multer(MulterCompanies).single('file'), CompaniesController.upload);
 routesAuth.get('/companies', CompaniesController.index);
@@ -30,10 +31,12 @@ routesAuth.delete('/companies/delete', CompaniesController.delete);
 routesAuth.post('/companies/scheduling', CompaniesController.scheduling);
 routesAuth.get('/companies/schedule', CompaniesController.schedule);
 routesAuth.delete('/companies/schedule/delete',CompaniesController.scheduleDelete);
+routesAuth.put('/companies/update',CompaniesController.updateData);
 
 routesAuth.post('/point/upload', multer(MulterPoints).single('file'), PointController.upload);
 routesAuth.get('/point', PointController.index);
 routesAuth.delete('/point/delete', PointController.delete);
+routesAuth.put('/point/update',PointController.updateData);
 
 routesAuth.put('/discarts/user/update', DiscartController.userUpdate);
 routesAuth.put('/discarts/company/update', DiscartController.companyUpdate);
