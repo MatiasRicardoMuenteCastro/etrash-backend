@@ -9,7 +9,7 @@ const PointController = require('./controllers/PointController');
 const DiscartController = require('./controllers/DiscartController');
 const ProfileController = require('./controllers/ProfileController');
 const botController = require('./controllers/botController');
-const newsController = require('./controllers/newsController');
+const newsController = require('./controllers/NewsController');
 
 const authMiddleware = require('./middlewares/auth');
 const MulterUsers = require('./config/MulterUsers');
