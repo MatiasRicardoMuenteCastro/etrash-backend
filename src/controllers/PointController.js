@@ -122,6 +122,7 @@ module.exports = {
             await connection('uploads').where('id',imageID.id).delete();
         }
         
+        await connection('denounces').where('pointID_denounced',idSearch.id).delete();
         await connection('discarts_points').where('id', point_id).delete();
         
         return response.send();

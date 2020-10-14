@@ -72,6 +72,7 @@ module.exports = {
 			latitude,
 			longitude
 		});
+		
 		return res.json({
 			welcome: `Bem vindo(a) ${name}`, 
 			id: id,  

@@ -10,6 +10,7 @@ const DiscartController = require('./controllers/DiscartController');
 const ProfileController = require('./controllers/ProfileController');
 const botController = require('./controllers/botController');
 const newsController = require('./controllers/NewsController');
+const DenouncesController = require('./controllers/DenouncesController');
 
 const authMiddleware = require('./middlewares/auth');
 const MulterUsers = require('./config/MulterUsers');
@@ -24,6 +25,7 @@ routesAuth.post('/users/upload', multer(MulterUsers).single('file'), UserControl
 routesAuth.get('/users', UserController.index);
 routesAuth.delete('/users/delete', UserController.delete);
 routesAuth.put('/users/update',UserController.updateData);
+routesAuth.post('/users/denounces/point',DenouncesController.userDenounce);
 
 routesAuth.post('/companies/upload', multer(MulterCompanies).single('file'), CompaniesController.upload);
 routesAuth.get('/companies', CompaniesController.index);
@@ -32,6 +34,7 @@ routesAuth.post('/companies/scheduling', CompaniesController.scheduling);
 routesAuth.get('/companies/schedule', CompaniesController.schedule);
 routesAuth.delete('/companies/schedule/delete',CompaniesController.scheduleDelete);
 routesAuth.put('/companies/update',CompaniesController.updateData);
+routesAuth.post('/companies/denounces/point',DenouncesController.companyDenounce);
 
 routesAuth.post('/point/upload', multer(MulterPoints).single('file'), PointController.upload);
 routesAuth.get('/point', PointController.index);
