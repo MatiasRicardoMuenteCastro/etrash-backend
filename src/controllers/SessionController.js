@@ -15,13 +15,13 @@ module.exports = {
     userCreate: async (req, res) => {
         const {email, passwordInput, localLat, localLon} = req.body;
         const userIDDB = await connection('users').where('email', email).select('id').first();
-
-        const passwordDB = await connection('users').where('id', userIDDB.id)
-        .select('password').first();
         
         if(!userIDDB){
             return res.status(400).json({error: 'Usuário não encontrado'});
         }
+        
+        const passwordDB = await connection('users').where('id', userIDDB.id)
+        .select('password').first();
 
         const passwordMatch = await bcrypt.compareSync(passwordInput, passwordDB.password);
         

@@ -25,9 +25,10 @@ module.exports={
         const findDenounce = await connection('denounces').select('id').where('pointID_denounced',pointFind.id).first();
 
 
-        if(!findDenounce){
-
+        if(!findDenounce){            
+ 
             await connection('denounces').insert({
+                userID_denouncer: [userFind.id],
                 pointID_denounced: pointFind.id,
                 denounces_counter: 1,
                 last_denounce_date: Date()
@@ -47,16 +48,57 @@ module.exports={
                 Denounce_date: date
             });
         }
-
-        const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+        
+        const doubleFindDB = await connection('denounces').where('pointID_denounced',pointFind.id).select('userID_denouncer')
         .first();
 
-        const counter = denouncesNumber.denounces_counter+1;
+        const doubleFindArray = doubleFindDB.userID_denouncer;
 
-        await connection('denounces').where('pointID_denounced',pointFind.id).update({
-            denounces_counter:counter,
-            last_denounce_date: Date()
+        for(let i = 0; i < 4; i++){
+            if(doubleFindArray[i] === userFind.id){
+                return response.status(401).json({error: 'Você só pode denunciar este ponto uma vez'});
+            }
+        }
+
+        const getArrayDB = await connection('denounces').where('pointID_denounced',pointFind.id).select('userID_denouncer').first();
+
+        const getArray = getArrayDB.userID_denouncer;
+
+        const getArrayVar = getArray.map(function(item){
+            if(item !== '\'NULL\''){
+                return item;
+            }
         });
+
+        if(getArrayVar[0] === undefined){
+
+            const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+            .first();
+    
+            const counter = denouncesNumber.denounces_counter+1;
+    
+            await connection('denounces').where('pointID_denounced',pointFind.id).update({
+                userID_denouncer: [userFind.id],
+                denounces_counter:counter,
+                last_denounce_date: Date()
+            });
+            
+        }
+        else{
+
+            const getArrayFinal = getArrayVar.concat(userFind.id);
+
+            const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+            .first();
+
+            const counter = denouncesNumber.denounces_counter+1;
+
+            await connection('denounces').where('pointID_denounced',pointFind.id).update({
+                userID_denouncer: getArrayFinal,
+                denounces_counter:counter,
+                last_denounce_date: Date()
+            });
+        }
 
 
         const refreshCounter = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
@@ -150,8 +192,11 @@ module.exports={
 
         const findDenounce = await connection('denounces').select('id').where('pointID_denounced',pointFind.id).first();
 
+
         if(!findDenounce){
+ 
             await connection('denounces').insert({
+                companyID_denouncer: [companyFind.id],
                 pointID_denounced: pointFind.id,
                 denounces_counter: 1,
                 last_denounce_date: Date()
@@ -172,16 +217,54 @@ module.exports={
             });
         }
 
-        const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+        const doubleFindDB = await connection('denounces').where('pointID_denounced',pointFind.id).select('companyID_denouncer')
         .first();
 
-        const counter = denouncesNumber.denounces_counter+1;
+        const doubleFindArray = doubleFindDB.companyID_denouncer;
 
-        await connection('denounces').where('pointID_denounced',pointFind.id).update({
-            denounces_counter:counter,
-            last_denounce_date: Date()
+        for(let i = 0; i < 4; i++){
+            if(doubleFindArray[i] === companyFind.id){
+                return response.status(401).json({error: 'Você só pode denunciar este ponto uma vez'});
+            }
+        }
+
+        const getArrayDB = await connection('denounces').where('pointID_denounced',pointFind.id).select('companyID_denouncer').first();
+
+        const getArray = getArrayDB.companyID_denouncer;
+
+        const getArrayVar = getArray.map(function(item){
+            if(item !== '\'NULL\''){    
+                return item;
+            }
         });
 
+        if(getArrayVar[0] === undefined){
+
+            const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+            .first();
+
+            const counter = denouncesNumber.denounces_counter+1;
+
+            await connection('denounces').where('pointID_denounced',pointFind.id).update({
+                companyID_denouncer: [companyFind.id],
+                denounces_counter:counter,
+                last_denounce_date: Date()
+            });
+        }
+        else{
+            const getArrayFinal = getArrayVar.concat(companyFind.id);
+
+            const denouncesNumber = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
+            .first();
+
+            const counter = denouncesNumber.denounces_counter+1;
+
+            await connection('denounces').where('pointID_denounced',pointFind.id).update({
+                companyID_denouncer: getArrayFinal,
+                denounces_counter:counter,
+                last_denounce_date: Date()
+            });
+        }
 
         const refreshCounter = await connection('denounces').where('pointID_denounced',pointFind.id).select('denounces_counter')
         .first();
@@ -190,7 +273,6 @@ module.exports={
             const email = await connection('discarts_points').select('email').where('id',pointFind.id)
             .first();
 
-            
             let findCompanyName = await connection('companies').where('id',companyFind.id).select('name').first();
             let findPointName = await connection('discarts_points').select('name').where('id',pointFind.id).first();
             let findDateEmail = await connection('denounces').select('last_denounce_date').where('pointID_denounced',pointFind.id)
@@ -199,12 +281,12 @@ module.exports={
             let denounces = refreshCounter.denounces_counter;
 
             let [denouncerEmail,pointEmail,dateEmail] = [findCompanyName.name,findPointName.name,findDateEmail.last_denounce_date];
-        
+
             mailer.sendMail({
 				to: email.email,
 				from:'etrash@outlook.com.br',
-				template:'auth/denounce',
-				context: {denouncerEmail,pointEmail,dateEmail,denounces}
+                template:'auth/denounce',
+                context:{denouncerEmail,pointEmail,dateEmail,denounces}
 			},(err)=>{
 				if(err){
 					console.log(err);
@@ -232,7 +314,7 @@ module.exports={
 					console.log(err);
                 }
             });
-            
+
             await connection('denounces').where('pointID_denounced',pointFind.id).delete();
             await connection('discarts_points').where('id',pointFind.id).delete();
             
@@ -245,7 +327,7 @@ module.exports={
         .first();
 
         const [company, point, date] = [companyName.name,pointName.name,denounceDate.last_denounce_date];
-        
+
         return response.json({
             message: 'Ponto denunciado com sucesso, informações da denuncia: ',
             Denounciator: company,
