@@ -6,8 +6,8 @@ const path = require('path');
 
 module.exports = {
 	userUpdate: async (req, res) => {
-		const { name, userDiscarts } = req.body;
-		const userIDDB = await connection('users').where('name', name)
+		const { userID, userDiscarts } = req.body;
+		const userIDDB = await connection('users').where('id', userID)
 		.select('id').first();
 
 		if(!userIDDB){
@@ -21,8 +21,8 @@ module.exports = {
 	},
 
 	companyUpdate: async (req, res) => {
-		const { companyName, companyDiscarts } = req.body;
-		const companyIDDB = await connection('companies').where('name', companyName)
+		const { companyID, companyDiscarts } = req.body;
+		const companyIDDB = await connection('companies').where('id', companyID)
 		.select('id').first();
 
 		if(!companyIDDB){
@@ -36,10 +36,9 @@ module.exports = {
 	},
 	
 	pointUpdate: async (req, res) => {
-		const { pointName, pointDiscarts } = req.body;
-		const pointIDDB = await connection('discarts_points')
-		.where('name', pointName)
-		.select('id').first();
+		const { pointID, pointDiscarts } = req.body;
+		const pointIDDB = await connection('discarts_points').where('id', pointID).select('id')
+		.first();
 
 		if(!pointIDDB){
 			return res.status(400).json({error: 'Ponto não encontrado'});
