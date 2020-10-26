@@ -172,7 +172,7 @@ module.exports = {
 			 	}
 		     });
 
-		      if (foundPoints[0] == "") {
+		      if (foundPoints == "") {
 		          return res.status(400).json({error: 'Nenhum ponto de coleta disponível'});
 		      }
 				
