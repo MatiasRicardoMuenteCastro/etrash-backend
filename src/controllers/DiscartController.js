@@ -6,7 +6,8 @@ const path = require('path');
 
 module.exports = {
 	userUpdate: async (req, res) => {
-		const { userID, userDiscarts } = req.body;
+		const userID = req.headers.authorization;
+		const {userDiscarts} = req.body;
 		const userIDDB = await connection('users').where('id', userID)
 		.select('id').first();
 
@@ -21,7 +22,8 @@ module.exports = {
 	},
 
 	companyUpdate: async (req, res) => {
-		const { companyID, companyDiscarts } = req.body;
+		const companyID = req.headers.authorization;
+		const {companyDiscarts} = req.body;
 		const companyIDDB = await connection('companies').where('id', companyID)
 		.select('id').first();
 
@@ -36,7 +38,8 @@ module.exports = {
 	},
 	
 	pointUpdate: async (req, res) => {
-		const { pointID, pointDiscarts } = req.body;
+		const pointID = req.headers.authorization;
+		const {pointDiscarts } = req.body;
 		const pointIDDB = await connection('discarts_points').where('id', pointID).select('id')
 		.first();
 
