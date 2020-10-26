@@ -97,9 +97,8 @@ module.exports = {
 		.select('discarts').first();
 
 		return res.json(pointDiscarts);
- 	},
-
-	searchPointForUser: async (req, res) => {
+	 },
+	 searchPointForUser: async (req, res) => {
 		const user_id = req.headers.authorization;
 		const userDiscartsDB = await connection('users').where('id', user_id)
 		.select('discarts').first();
@@ -122,7 +121,7 @@ module.exports = {
 		       );
 
 
-		if (userDiscartsDB.discarts == null) {
+		if (userDiscartsDB.discarts[0] == null) { //Tirar .discarts[0]
 			return res.status(400).json({error: 'Não encontramos seus descartes'});
 		}
 
@@ -172,7 +171,7 @@ module.exports = {
 			 	}
 		     });
 
-		      if (foundPoints == "") {
+		      if (foundPoint[0] == "") { //Found Points
 		          return res.status(400).json({error: 'Nenhum ponto de coleta disponível'});
 		      }
 				
