@@ -120,8 +120,7 @@ module.exports = {
 				'longitude'
 		       );
 
-
-		if (userDiscartsDB.discarts[0] == null) { //Tirar .discarts[0]
+		if (userDiscartsDB.discarts == null) {
 			return res.status(400).json({error: 'Não encontramos seus descartes'});
 		}
 
@@ -171,7 +170,7 @@ module.exports = {
 			 	}
 		     });
 
-		      if (foundPoint[0] == "") { //Found Points
+		      if (foundPoints[0] == "") {
 		          return res.status(400).json({error: 'Nenhum ponto de coleta disponível'});
 		      }
 				
