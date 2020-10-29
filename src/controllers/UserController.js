@@ -112,7 +112,7 @@ module.exports = {
 			
 			await connection('uploads').where('user_id', userId).delete();
 		}
-		
+		await connection('feedback').where('user_id',userId).delete();
 		await connection('users').where('id', userId).delete();
 		return res.send();
 		

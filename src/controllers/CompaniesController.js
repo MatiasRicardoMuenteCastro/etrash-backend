@@ -153,7 +153,7 @@ module.exports = {
         if (companyCollector) {
             await connection('schedule').where('company_collector_id', companyIdBD.id).delete();
         }
-        
+        await connection('feedback').where('company_id',companyIdBD.id).delete();
         await connection('uploads').where('company_id', companyIdBD.id).delete();
         await connection('schedule').where('company_id', companyIdBD.id).delete();
         await connection('companies').where('id', companyIdBD.id).delete();
