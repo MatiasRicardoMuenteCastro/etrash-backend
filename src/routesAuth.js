@@ -23,7 +23,7 @@ routesAuth.use(authMiddleware);
 routesAuth.use(express.urlencoded({extended: true }));
 routesAuth.use(morgan('dev'));
 
-routesAuth.use('/files-users',express.static(path.resolve(__dirname,'..','temp','uploads','users')));
+routesAuth.use('/files-users',express.static(path.resolve(__dirname,'.','temp','uploads','users')));
 routesAuth.post('/users/upload', multer(MulterUsers).single('file'), UserController.upload);
 routesAuth.get('/users', UserController.index);
 routesAuth.delete('/users/delete', UserController.delete);
@@ -32,7 +32,7 @@ routesAuth.post('/users/denounces/point',DenouncesController.userDenounce);
 routesAuth.post('/users/feedback',FeedBackController.createUser);
 routesAuth.delete('/users/feedback/delete',FeedBackController.deleteFeedbackUser);
 
-routesAuth.use('/files-companies',express.static(path.resolve(__dirname,'..','temp','uploads','companies')));
+routesAuth.use('/files-companies',express.static(path.resolve(__dirname,'.','temp','uploads','companies')));
 routesAuth.post('/companies/upload', multer(MulterCompanies).single('file'), CompaniesController.upload);
 routesAuth.get('/companies', CompaniesController.index);
 routesAuth.delete('/companies/delete', CompaniesController.delete);
@@ -44,8 +44,8 @@ routesAuth.post('/companies/denounces/point',DenouncesController.companyDenounce
 routesAuth.post('/companies/feedback',FeedBackController.createCompany);
 routesAuth.delete('/companies/feedback/delete',FeedBackController.deleteFeedbackCompany);
 
-routesAuth.use('/files-points',express.static(path.resolve(__dirname,'..','temp','uploads','points')));
-console.log(path.resolve(__dirname,'..','temp','uploads','points'));
+routesAuth.use('/files-points',express.static(path.resolve(__dirname,'.','temp','uploads','points')));
+console.log(path.resolve(__dirname,'.','temp','uploads','points'));
 routesAuth.post('/point/upload', multer(MulterPoints).single('file'), PointController.upload);
 routesAuth.get('/point', PointController.index);
 routesAuth.delete('/point/delete', PointController.delete);
