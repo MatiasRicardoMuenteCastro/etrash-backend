@@ -44,7 +44,7 @@ module.exports = {
         
         const companiesAvatars = companiesAvatarsKey.map(function(item){
             const key = item.key;
-            const avatar = path.resolve(`../../temp/uploads/companies/${key}`);
+            const avatar = path.resolve(`files-companies/${key}`);
             return avatar;
         }); 
         return response.json({companies, avatar: companiesAvatars});
