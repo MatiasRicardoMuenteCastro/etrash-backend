@@ -21,10 +21,10 @@ module.exports = {
           input: {'text': message}
           })
           .then(response => {
-            res.send(response.result, null, 2);
+            res.json(response.result, null, 2);
           })
           .catch(err => {
-            res.send('Erro ao enviar a mensagem.');
+            res.json({error:'Erro ao enviar a mensagem.'});
           });
       }
     }
