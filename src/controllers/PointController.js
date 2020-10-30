@@ -30,7 +30,7 @@ module.exports = {
 
         const pointsAvatars = pointsAvatarsKey.map(function(item){
             const key = item.key;
-            const avatar = path.resolve(`files-points/${key}`);
+            const avatar = path.resolve(`${key}`);
             return avatar;
         }); 
         return response.json({points, avatar: pointsAvatars});

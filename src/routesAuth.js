@@ -45,6 +45,7 @@ routesAuth.post('/companies/feedback',FeedBackController.createCompany);
 routesAuth.delete('/companies/feedback/delete',FeedBackController.deleteFeedbackCompany);
 
 routesAuth.use('/files-points',express.static(path.resolve(__dirname,'..','temp','uploads','points')));
+console.log(path.resolve(__dirname,'..','temp','uploads','points'));
 routesAuth.post('/point/upload', multer(MulterPoints).single('file'), PointController.upload);
 routesAuth.get('/point', PointController.index);
 routesAuth.delete('/point/delete', PointController.delete);
