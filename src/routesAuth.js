@@ -67,7 +67,7 @@ routesAuth.post('/profile/company/avatar', multer(MulterCompanies).single('file'
 routesAuth.get('/profile/point', ProfileController.pointProfile);
 routesAuth.post('/profile/point/avatar', multer(MulterPoints).single('file'), ProfileController.updatePointAvatar);
 
-routesAuth.get('/watson/send',botController.sendChat);
+routesAuth.post('/watson/send',botController.sendChat);
 routesAuth.get('/news/get',newsController.get);
 
 module.exports = routesAuth;
