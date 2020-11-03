@@ -29,6 +29,6 @@
     "nodemon": "^2.0.4"
   },
   "scripts": {
-    "start": "nodea src/index.js"
+    "start": "node src/index.js"
   }
 }
