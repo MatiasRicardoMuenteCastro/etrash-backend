@@ -6,6 +6,8 @@ const authConfig = require('../config/auth');
 const fs = require('fs');
 const path = require('path');
 const mailer = require('../modules/mailer');
+const axios = require('axios');
+const FormData = require('form-data');
 
 function hash(password){
 	const saltRounds = 12;
@@ -26,11 +28,11 @@ module.exports = {
 		const [count] = await connection('users').count();
 		res.header('X-Total-Count', count['count']);
 		
-		const usersAvatarsKey = await connection('uploads').whereNotNull('user_id').select('key');
+		const usersAvatarsUrl = await connection('uploads').whereNotNull('user_id').select('url');
 
-		const usersAvatars = usersAvatarsKey.map(function(item){
-			const key = item.key;
-			const avatar = path.resolve(`${key}`);
+		const usersAvatars = usersAvatarsUrl.map(function(item){
+			const url = item.url;
+			const avatar = url;
 			return avatar;
 		}); 
 		return res.json({users, avatar: usersAvatars});
@@ -160,6 +162,7 @@ module.exports = {
 	
 	upload: async (req, res) => {
 		const userId = req.headers.authorization;
+		const url = req.headers.url;
 		const userIDDB = await connection('users').where('id', userId)
 		.select('id').first();
 
@@ -177,6 +180,7 @@ module.exports = {
 			imgName,
 			size,
 			key,
+			url,
 			user_id
 		}); 
 		return res.json({sucess:"Imagem carregada com sucesso!" });

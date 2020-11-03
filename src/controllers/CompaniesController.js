@@ -40,11 +40,11 @@ module.exports = {
         const [count] = await connection('companies').count();
         response.header('Total-Companies-Count', count['count']);
 
-        const companiesAvatarsKey = await connection('uploads').whereNotNull('company_id').select('key');
+        const companiesAvatarsUrl = await connection('uploads').whereNotNull('company_id').select('url');
         
-        const companiesAvatars = companiesAvatarsKey.map(function(item){
-            const key = item.key;
-            const avatar = path.resolve(`${key}`);
+        const companiesAvatars = companiesAvatarsUrl.map(function(item){
+            const url = item.url;
+            const avatar = url;
             return avatar;
         }); 
         return response.json({companies, avatar: companiesAvatars});
@@ -207,6 +207,7 @@ module.exports = {
     
     async upload(request, response){
         const companyId = request.headers.authorization;
+        const url = request.headers.url;
         const companyIDDB = await connection('companies').where('id', companyId)
         .select('id').first();
 
@@ -224,6 +225,7 @@ module.exports = {
             imgName,
             size,
             key,
+            url,
             company_id
         }); 
         return response.json({sucess:"Imagem carregada com sucesso!" });

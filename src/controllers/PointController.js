@@ -26,11 +26,11 @@ module.exports = {
         const [count] = await connection('companies').count();
         response.header('Total-Companies-Count', count['count']);
 
-        const pointsAvatarsKey = await connection('uploads').whereNotNull('point_id').select('key');
+        const pointsAvatarsUrl = await connection('uploads').whereNotNull('point_id').select('url');
 
-        const pointsAvatars = pointsAvatarsKey.map(function(item){
-            const key = item.key;
-            const avatar = path.resolve(`${key}`);
+        const pointsAvatars = pointsAvatarsUrl.map(function(item){
+            const url = item.url;
+            const avatar = url
             return avatar;
         }); 
         return response.json({points, avatar: pointsAvatars});
@@ -176,6 +176,7 @@ module.exports = {
     
     upload: async(request, response) => {
         const point_id = request.headers.authorization;
+        const url = request.headers.url;
         const pointIDDB = await connection('discarts_points').where('id', point_id)
         .select('id').first();
 
@@ -193,6 +194,7 @@ module.exports = {
             imgName,
             size,
             key,
+            url,
             point_id: newPointId
         }); 
         return response.json({sucess:"Imagem carregada com sucesso!" });
