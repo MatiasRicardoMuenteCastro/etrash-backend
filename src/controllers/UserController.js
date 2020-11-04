@@ -101,14 +101,10 @@ module.exports = {
 			return res.status(401).json({error: 'Senha incorreta'});
 		}
 
-		const oldAvatarKey = await connection('uploads').where('user_id', userId).select('key')
+		const oldAvatarUrl = await connection('uploads').where('user_id', userId).select('url')
 		.first();
 		
-		if(oldAvatarKey){
-			await fs.unlink(`./temp/uploads/users/${oldAvatarKey.key}`, function(err){
-				if(err) throw err;
-			});
-			
+		if(oldAvatarUrl){
 			await connection('uploads').where('user_id', userId).delete();
 		}
 		await connection('feedback').where('user_id',userId).delete();

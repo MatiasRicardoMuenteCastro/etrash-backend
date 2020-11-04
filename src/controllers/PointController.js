@@ -109,14 +109,10 @@ module.exports = {
         	return response.status(400).json({error: 'Senha inválida'});
         }
 
-        const oldPointKey = await connection('uploads').where('point_id',  point_id).select('key')
+        const oldPointUrl = await connection('uploads').where('point_id',  point_id).select('url')
         .first();
         
-        if(oldPointKey){
-            await fs.unlink(`./temp/uploads/points/${oldPointKey.key}`, function(err){
-			     if(err) throw err;
-            });
-            
+        if(oldPointUrl){            
             const imageID = await connection('uploads').select('id').where('point_id',point_id).first();
 
             await connection('uploads').where('id',imageID.id).delete();

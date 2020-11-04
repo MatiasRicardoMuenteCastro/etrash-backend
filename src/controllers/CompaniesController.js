@@ -138,13 +138,11 @@ module.exports = {
             return response.status(401).json({error: 'Senha Inválida'});
         }
 
-        const oldCompanyKey = await connection('uploads').where('company_id', companyId)
+        const oldCompanyUrl = await connection('uploads').where('company_id', companyId)
         .select('key').first();
 
-        if(oldCompanyKey){
-            await fs.unlink(`./temp/uploads/companies/${oldCompanyKey.key}`, function(err){
-			     if(err) throw err;
-            });
+        if(oldCompanyUrl){
+            await connection('uploads').where('company_id',companyIdBD.id).delete();
         }   
         
         const companyCollector = await connection('companies').where('collector', true)
