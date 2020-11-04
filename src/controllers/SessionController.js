@@ -30,13 +30,27 @@ module.exports = {
         }
 
         const userName = await connection('users').where('id', userIDDB.id).select('name').first();
-		
+        const userImageUrl = await connection('uploads').where('user_id',userIDDB.id).select('url').first();
+
+        if(!userImageUrl){
+            await connection('users').where('id', userIDDB.id).update({latitude: localLat, longitude: localLon });
+		    return res.json({
+                id: userIDDB.id,
+                user: userName.name,
+                email: email,
+                imageUrl: null,
+                token: generateToken({id: userIDDB.id}),
+        });
+
+        }
+
 		await connection('users').where('id', userIDDB.id).update({latitude: localLat, longitude: localLon });
 		return res.json({
             id: userIDDB.id,
             user: userName.name,
             email: email,
-            token: generateToken({id: userIDDB.id})
+            imageUrl: userImageUrl.url,
+            token: generateToken({id: userIDDB.id}),
         });
 
     },
@@ -60,12 +74,25 @@ module.exports = {
         }
 
         const companyName = await connection('companies').where('id', companyID.id).select('name').first();
+        const companyUrl = await connection('uploads').where('company_id',companyID.id).select('url').first();
+
+        if(!companyUrl){
+        await connection('companies').where('id', companyID.id).update({latitude: localLat, longitude: localLon });
+        return res.json({
+            id: companyID.id,
+            company: companyName.name,
+            email: email,
+            imageUrl:null,
+            token: generateToken({id: companyID.id})
+        });
+        }
 
         await connection('companies').where('id', companyID.id).update({latitude: localLat, longitude: localLon });
         return res.json({
             id: companyID.id,
             company: companyName.name,
             email: email,
+            imageUrl: companyUrl.url,
             token: generateToken({id: companyID.id})
         });
 
@@ -89,6 +116,18 @@ module.exports = {
             return res.status(400).json({error: 'Senha Inválida'});
         }
         const pointName = await connection('discarts_points').where('id',pointID.id).select('name').first();
+        const pointUrl = await connection('uploads').where('point_id',pointID.id).select('url').first();
+
+        if(!pointUrl){
+            await connection('discarts_points').where('id', pointID.id).update({latitude: localLat, longitude: localLon });
+            return res.json({
+                id: pointID.id,
+                name: pointName.name,
+                email: email,
+                urlImage: null,
+                token: generateToken({id: pointID.id})
+            });
+        }
 
         await connection('discarts_points').where('id', pointID.id).update({latitude: localLat, longitude: localLon });
 
@@ -96,6 +135,7 @@ module.exports = {
             id: pointID.id,
             name: pointName.name,
             email: email,
+            imageUrl: pointUrl.url,
             token: generateToken({id: pointID.id})
         });
     }

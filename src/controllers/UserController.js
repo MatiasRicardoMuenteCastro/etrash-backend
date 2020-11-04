@@ -4,10 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
 const fs = require('fs');
-const path = require('path');
 const mailer = require('../modules/mailer');
-const axios = require('axios');
-const FormData = require('form-data');
 
 function hash(password){
 	const saltRounds = 12;
@@ -168,6 +165,12 @@ module.exports = {
 
 		if (!userIDDB) {
 			return res.status(400).json({error: 'Usuário não encontrado.'})
+		}
+
+		const userUrl = await connection('uploads').where('user_id',userIDDB.id).select('url').first();
+
+		if(userUrl){
+			return res.status(401).json({error: 'Imagem de usuário já existente.'});
 		}
 		
 		const id = crypto.randomBytes(5).toString('HEX');

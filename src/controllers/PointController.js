@@ -183,6 +183,12 @@ module.exports = {
         if (!pointIDDB) {
             return response.status(400).json({error: 'Ponto de coleta não encontrado.'})
         }
+
+        const pointUrl = await connection('uploads').where('point_id',pointIDDB.id).select('url').first();
+
+        if(pointUrl){
+            return response.json({error: 'Imagem do ponto já existente.'});
+        }
         
         const id = crypto.randomBytes(5).toString('HEX');
         const newPointId = pointIDDB.id;

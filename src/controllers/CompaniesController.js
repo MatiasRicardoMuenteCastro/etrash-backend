@@ -214,7 +214,13 @@ module.exports = {
         if (!companyIDDB) {
             return response.status(400).json({error: 'Empresa não encontrado.'})
         }
-        
+
+        const companyUrl = await connection('uploads').where('company_id',companyIDDB.id).select('url').first();
+
+        if(companyUrl){
+            return response.json({error: 'Imagem de empresa já existente.'});
+        }
+
         const id = crypto.randomBytes(5).toString('HEX');
         const company_id = companyIDDB.id;
         const imgName = request.file.originalname;
