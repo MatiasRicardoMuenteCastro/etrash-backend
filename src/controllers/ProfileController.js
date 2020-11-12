@@ -47,12 +47,8 @@ module.exports = {
 			return res.status(400).json({error: 'Usuário não encontrado'});
 		}
 		
-		const imgName = req.file.originalname;
-		const size = req.file.size;
-		const key = req.file.filename;
-
 	    await connection('uploads').where('user_id', userDB.id)
-		.update({ imgName: imgName, size: size, key: key, url });
+		.update({ url });
 
 		return res.json({sucess: 'Avatar atualizado'}); 
 	},
@@ -105,11 +101,8 @@ module.exports = {
 			return res.status(400).json({error: 'Empresa não encontrada'});
 		}
 
-		const imgName = req.file.originalname;
-		const size = req.file.size;
-		const key = req.file.filename;
 		 await connection('uploads').where('company_id', companyDB.id)
-		.update({ imgName: imgName, size: size, key: key, url });
+		.update({ url });
 
 		return res.json({sucess: 'Avatar atualizado'}); 
 	},
@@ -160,11 +153,8 @@ module.exports = {
 			return res.status(400).json({error: 'Ponto de coleta não encontrado'});
 		}
 
-		const imgName = req.file.originalname;
-		const size = req.file.size;
-		const key = req.file.filename;
 		await connection('uploads').where('point_id', pointDB.id)
-		.update({ imgName: imgName, size: size, key: key, url });
+		.update({ url });
 
 		return res.json({sucess: 'Avatar atualizado'}); 
 		

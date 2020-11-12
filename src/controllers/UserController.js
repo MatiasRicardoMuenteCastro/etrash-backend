@@ -171,14 +171,9 @@ module.exports = {
 		
 		const id = crypto.randomBytes(5).toString('HEX');
 		const user_id = userIDDB.id;
-		const imgName = req.file.originalname;
-		const size = req.file.size;
-		const key = req.file.filename;
+
 		await connection('uploads').insert({
 			id,
-			imgName,
-			size,
-			key,
 			url,
 			user_id
 		}); 

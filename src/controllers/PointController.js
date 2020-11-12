@@ -188,14 +188,9 @@ module.exports = {
         
         const id = crypto.randomBytes(5).toString('HEX');
         const newPointId = pointIDDB.id;
-        const imgName = request.file.originalname;
-        const size = request.file.size;
-        const key = request.file.filename;
+        
         await connection('uploads').insert({
             id,
-            imgName,
-            size,
-            key,
             url,
             point_id: newPointId
         }); 
