@@ -205,7 +205,7 @@ module.exports = {
     
     async upload(request, response){
         const companyId = request.headers.authorization;
-        const url = request.headers.url;
+        const {url} = request.body;
         const companyIDDB = await connection('companies').where('id', companyId)
         .select('id').first();
 

@@ -39,7 +39,7 @@ module.exports = {
 
 	updateUserAvatar: async (req, res) => {
 		const userId = req.headers.authorization;
-		const url = req.headers.url;
+		const {url} = req.body;
 		const userDB = await connection('users').where('id', userId)
 		.select('id').first();
 
@@ -93,7 +93,7 @@ module.exports = {
 
 	updateCompanyAvatar: async (req, res) => {
 		const companyId = req.headers.authorization;
-		const url = req.headers.url; 
+		const {url} = req.body; 
 		const companyDB = await connection('companies').where('id', companyId)
 		.select('id').first();
 
@@ -145,7 +145,7 @@ module.exports = {
 
 	updatePointAvatar: async (req, res) => {
 		const pointId = req.headers.authorization; 
-		const url = req.headers.url;
+		const {url} = req.body;
 		const pointDB = await connection('discarts_points').where('id', pointId)
 		.select('id').first();
 

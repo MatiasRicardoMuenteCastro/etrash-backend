@@ -155,7 +155,7 @@ module.exports = {
 	
 	upload: async (req, res) => {
 		const userId = req.headers.authorization;
-		const url = req.headers.url;
+		const {url} = req.body;
 		const userIDDB = await connection('users').where('id', userId)
 		.select('id').first();
 

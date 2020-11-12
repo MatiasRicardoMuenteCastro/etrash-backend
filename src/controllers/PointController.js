@@ -172,7 +172,7 @@ module.exports = {
     
     upload: async(request, response) => {
         const point_id = request.headers.authorization;
-        const url = request.headers.url;
+        const {url} = request.body;
         const pointIDDB = await connection('discarts_points').where('id', point_id)
         .select('id').first();
 
