@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const multer = require('multer');
 const path = require('path');
 const routesAuth = express.Router();
 
