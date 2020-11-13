@@ -46,7 +46,14 @@ module.exports = {
 		if (!userDB) {
 			return res.status(400).json({error: 'Usuário não encontrado'});
 		}
-		
+
+		const userUrl = await connection('uploads').where('user_id',userDB.id).select('url')
+		.first();
+
+		if(!userUrl){
+			return res.status(400).json({error:'Imagem de usuário não encontrada'});
+		}
+
 	    await connection('uploads').where('user_id', userDB.id)
 		.update({ url });
 
@@ -101,6 +108,13 @@ module.exports = {
 			return res.status(400).json({error: 'Empresa não encontrada'});
 		}
 
+		const companyUrl = await connection('uploads').where('company_id',companyDB.id).select('url')
+		.first();
+
+		if(!companyUrl){
+			return res.json({error:'Imagem de companhia não encontrada'});
+		}
+
 		 await connection('uploads').where('company_id', companyDB.id)
 		.update({ url });
 
@@ -151,6 +165,13 @@ module.exports = {
 
 		if (!pointDB) {
 			return res.status(400).json({error: 'Ponto de coleta não encontrado'});
+		}
+
+		const pointUrl = await connection('uploads').where('point_id',pointDB.id).select('url')
+		.first();
+
+		if(!pointUrl){
+			return res.status(400).json({error:'Ponto de coleta sem imagem'})
 		}
 
 		await connection('uploads').where('point_id', pointDB.id)
