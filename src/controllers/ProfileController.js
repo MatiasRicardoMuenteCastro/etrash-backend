@@ -1,4 +1,5 @@
 const connection = require('../database/connection');
+const crypto = require('crypto');
 
 module.exports = {
 
@@ -51,7 +52,13 @@ module.exports = {
 		.first();
 
 		if(!userUrl){
-			return res.status(400).json({error:'Imagem de usuário não encontrada'});
+			const imageID = await crypto.randomBytes(5).toString("HEX");
+			await connection('uploads').insert({
+				id: imageID,
+				url,
+				user_id: userDB.id
+			});
+			return res.json({succes: 'Não foi encontrada uma imagem no banco de dados, então essa imagem foi inserida automaticamente'});
 		}
 
 	    await connection('uploads').where('user_id', userDB.id)
@@ -112,7 +119,15 @@ module.exports = {
 		.first();
 
 		if(!companyUrl){
-			return res.json({error:'Imagem de companhia não encontrada'});
+			const companyImageID = await crypto.randomBytes(5).toString("HEX");
+
+			await connection('uploads').insert({
+				id: companyImageID,
+				url,
+				company_id: companyDB.id
+			});
+
+			return res.json({succes: 'Não foi encontrada uma imagem no banco de dados, então essa imagem foi inserida automaticamente'});
 		}
 
 		 await connection('uploads').where('company_id', companyDB.id)
@@ -171,7 +186,15 @@ module.exports = {
 		.first();
 
 		if(!pointUrl){
-			return res.status(400).json({error:'Ponto de coleta sem imagem'})
+			const pointImageID = await crypto.randomBytes(5).toString("HEX");
+
+			await connection('uploads').insert({
+				id: pointImageID,
+				url,
+				point_id:pointDB.id
+			});
+
+			return res.json({succes: 'Não foi encontrada uma imagem no banco de dados, então essa imagem foi inserida automaticamente'});
 		}
 
 		await connection('uploads').where('point_id', pointDB.id)
