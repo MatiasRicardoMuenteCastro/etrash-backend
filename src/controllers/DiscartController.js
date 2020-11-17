@@ -109,7 +109,8 @@ module.exports = {
 
 		const discartPointsDB = await connection('discarts_points')
 		.where('discarts', userDiscartsDB.discarts)
-		.select('name', 
+		.select('id',
+				'name', 
 		        'rua', 
 		        'numero', 
 				'discarts', 
@@ -119,7 +120,6 @@ module.exports = {
 				'latitude',
 				'longitude'
 		       );
-
 		if (userDiscartsDB.discarts == null) {
 			return res.status(400).json({error: 'Não encontramos seus descartes'});
 		}
@@ -175,30 +175,36 @@ module.exports = {
 		      }
 				
 	          // response for result of search
-	          const avatarPointsUpload = await connection('uploads').select('*');
-	  		  const avatarPoints = avatarPointsUpload.filter(function(item){
-	   			for(const [upPointId, disPointId] of itertools.izipLongest(item.point_id, itertools.cycle(foundPoints.id), fillvalue='')){
-	   				if(upPointId == disPointId){
-	   					const avatar = path.resolve(`../../temp/uploads/points/${item.key}`);
-	   					return avatar;
-	   				}
-	   			}
-	   		  });
-
+			  const avatarPointsUpload = await connection('uploads').select('*');
+	  		const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+						if(pointUpload.point_id == discarts.id){
+							   const avatar = pointUpload.url;
+							   console.log(avatar)
+							   return avatar;
+						   }
+					
+				   });
+				   return discartFilter;
+		   });
 		      return res.json({foundPoints, avatar: avatarPoints});
 		  }
 		// case the filter return empty array
 		return res.status(400).json({error: 'Nenhum ponto de coleta encontrado'});
 	   }
-	   // case the dsiacarts of user return total Match with point discarts
+	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
-	   const avatarPoints = avatarPointsUpload.filter(function(item){
-	   		for(const [upPointId, disPointId] of itertools.izipLongest(item.point_id, itertools.cycle(discartPointsDB.id), fillvalue='')){
-	   			if(upPointId == disPointId){
-	   				const avatar = path.resolve(`../../temp/uploads/points/${item.key}`);
-	   				return avatar;
-	   			}
-	   		}
+	   
+	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+					if(pointUpload.point_id == discarts.id){
+						   const avatar = pointUpload.url;
+						   console.log(avatar)
+	   					return avatar;
+					   }
+				
+			   });
+			   return discartFilter;
 	   });
        return res.json({discartPointsDB, avatar: avatarPoints});
 	}	
