@@ -50,17 +50,14 @@ module.exports = {
         
         const imagesOrganize = pointsImagesOrganize(pointsIDArray,uploadsArray);
 
-        const images = imagesOrganize.map(function(item){
+        const pointsAvatars = imagesOrganize.map(function(item){
             for(let x of item){
                 if(x !== undefined){
                     return x;
                 };
             }
         });
-        return response.json({
-            points,
-            images
-        })
+        return response.json({points,avatar: pointsAvatars})
     },
    	
    	create: async (request, response) => {
