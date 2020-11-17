@@ -6,6 +6,10 @@ const authConfig = require('../config/auth');
 const fs = require('fs');
 const path = require('path');
 const mailer = require('../modules/mailer');
+const itertools = require('itertools');
+const { CONNREFUSED } = require('dns');
+const { compactObject } = require('itertools/custom');
+const { cpuUsage } = require('process');
 
 function hash(password){
 	const saltRounds = 12;
@@ -19,21 +23,44 @@ function generateToken(params = {}){
 		expiresIn:86400,
 	});
 }
+function pointsImagesOrganize(pointsIDArray,uploadsArray){
+    const pointsIDMapping = pointsIDArray.map(function(id){
+        const uploadsUrlFilter = uploadsArray.map(function(item){
+            if(id === item.point_id){
+                const url = item.url
+                return (url);
+            }
+        });
+        return uploadsUrlFilter;
+    })
+    return pointsIDMapping;
+}
 
 module.exports = {
     index: async (request, response) => {
-        const points = await connection('discarts_points').select('name','rua','numero','numero','discarts','country','city','region','longitude','latitude');
+        const points = await connection('discarts_points').select('id','name','rua','numero','numero','discarts','country','city','region','longitude','latitude');
         const [count] = await connection('companies').count();
         response.header('Total-Companies-Count', count['count']);
 
-        const pointsAvatarsUrl = await connection('uploads').whereNotNull('point_id').select('url');
+        const pointsIDArray = points.map(function(item){
+            return item.id;
+        });
 
-        const pointsAvatars = pointsAvatarsUrl.map(function(item){
-            const url = item.url;
-            const avatar = url
-            return avatar;
-        }); 
-        return response.json({points, avatar: pointsAvatars});
+        const uploadsArray = await connection('uploads').whereNotNull('point_id').select('point_id','url');
+        
+        const imagesOrganize = pointsImagesOrganize(pointsIDArray,uploadsArray);
+
+        const images = imagesOrganize.map(function(item){
+            for(let x of item){
+                if(x !== undefined){
+                    return x;
+                };
+            }
+        });
+        return response.json({
+            points,
+            images
+        })
     },
    	
    	create: async (request, response) => {
