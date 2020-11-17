@@ -139,7 +139,7 @@ module.exports = {
         }
 
         const oldCompanyUrl = await connection('uploads').where('company_id', companyId)
-        .select('key').first();
+        .select('url').first();
 
         if(oldCompanyUrl){
             await connection('uploads').where('company_id',companyIdBD.id).delete();
