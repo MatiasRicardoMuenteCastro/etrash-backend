@@ -77,9 +77,7 @@ module.exports = {
      return res.json({success: "Feedback enviado com sucesso."});
     },
     getPointFeedback: async(req,res)=>{
-        const {pointID} = req.body;
-
-        const findFeedback = await connection('feedback').where('point_id',pointID).select('*');
+        const findFeedback = await connection('feedback').select('*');
 
         if(!findFeedback){
             return res.status(401).json({error:'Feedbacks não encontrados'});
