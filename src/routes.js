@@ -36,6 +36,7 @@ routes.put('/point/password/reset',PointController.reset);
 routes.delete('/deletakaique', async (req,res)=>{
     await connection('uploads').where('point_id','f10033ad51').delete();
     await connection('discarts_points').where('id','f10033ad51').delete();
+    return res.json({sucess:'foi'});
 });
 
 
