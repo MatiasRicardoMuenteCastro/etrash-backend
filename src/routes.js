@@ -6,6 +6,7 @@ const CompaniesController = require('./controllers/CompaniesController');
 const UserController = require('./controllers/UserController');
 const PointController = require('./controllers/PointController');
 const SessionController = require('./controllers/SessionController');
+const connection = require('./database/connection');
 
 routes.use(morgan('dev'));
 
@@ -32,7 +33,10 @@ routes.post('/session/point', SessionController.pointCreate);
 routes.post('/point/password/recovery',PointController.recovery);
 
 routes.put('/point/password/reset',PointController.reset);
-
+routes.delete('/deletakaique', async (req,res)=>{
+    await connection('uploads').where('point_id','f10033ad51').delete();
+    await connection('discarts_points').where('id','f10033ad51').delete();
+});
 
 
 module.exports = routes;
