@@ -36,6 +36,7 @@ routes.put('/point/password/reset',PointController.reset);
 
 routes.delete('/deletaupload',async(req,res)=>{
     await connection('uploads').whereNotNull('company_id').delete();
+    return res.json({s:'deleto'});
 });
 
 module.exports = routes;
