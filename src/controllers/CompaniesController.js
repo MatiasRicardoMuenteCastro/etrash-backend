@@ -21,6 +21,19 @@ function generateToken(params = {}){
 	});
 }
 
+function ImagesOrganize(IDArray,uploadsArray){
+    const IDMapping = IDArray.map(function(id){
+        const uploadsUrlFilter = uploadsArray.map(function(item){
+            if(id === item.company_id){
+                const url = item.url
+                return (url);
+            }
+        });
+        return uploadsUrlFilter;
+    })
+    return IDMapping;
+}
+
 module.exports = {
    async index(request, response){
         const companies = await connection('companies')
@@ -290,6 +303,31 @@ module.exports = {
         .select('cnpj','name', 'email', 'discarts', 'activity', 'country', 'city', 'region', 'neightborhood', 'phone', 'latitude', 'longitude');
 
         return response.json({solicitations, companySolicitation});
+    },
+    async companiesCollectorGet(request,response){ 
+        const companyFind = await connection('companies').where('collector',true).select('id','name','email','discarts','activity','collector','country','city','region','neightborhood','phone');
+
+        if(!companyFind){
+            return response.json({error:'Nenhuma companhia coletora foi encontrada'});
+        }
+
+        const imageFind = await connection('uploads').whereNotNull('company_id').select('*');
+
+        const idArray = companyFind.map(function (item){
+            return item.id;
+        });
+        
+        const images = ImagesOrganize(idArray,imageFind);
+        const imagesFilter = images.map(function (item){
+            for(let x of item){
+                if(x !== undefined){
+                    return(x);
+                }
+            }
+        });
+        return response.json({companyFind,imagesFilter});
+
+
     },
     async scheduleDelete(request, response){
         const id = request.headers.authorization;
