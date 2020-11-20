@@ -4,7 +4,7 @@ exports.up = function(knex) {
 		table.string('company_id').notNullable();
 		table.string('company_collector_id').notNullable();
 		table.string('date_scheduling').notNullable();
-		table.date('date_collect').notNullable();
+		table.string('date_collect').notNullable();
 
 		table.foreign('company_id').references('id').inTable('companies');
 		table.foreign('company_collector_id').references('id').inTable('companies');
