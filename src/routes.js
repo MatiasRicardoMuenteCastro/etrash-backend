@@ -6,6 +6,7 @@ const CompaniesController = require('./controllers/CompaniesController');
 const UserController = require('./controllers/UserController');
 const PointController = require('./controllers/PointController');
 const SessionController = require('./controllers/SessionController');
+const connection = require('./database/connection');
 
 routes.use(morgan('dev'));
 
@@ -33,5 +34,8 @@ routes.post('/point/password/recovery',PointController.recovery);
 
 routes.put('/point/password/reset',PointController.reset);
 
+routes.delete('/deletaupload',async(req,res)=>{
+    await connection('uploads').whereNotNull('company_id').delete();
+});
 
 module.exports = routes;
