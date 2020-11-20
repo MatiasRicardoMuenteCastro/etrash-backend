@@ -32,6 +32,7 @@ routesAuth.get('/companies', CompaniesController.index);
 routesAuth.delete('/companies/delete', CompaniesController.delete);
 routesAuth.post('/companies/scheduling', CompaniesController.scheduling);
 routesAuth.get('/companies/schedule', CompaniesController.schedule);
+routesAuth.get('/companies/collectors',CompaniesController.companiesCollectorGet);
 routesAuth.delete('/companies/schedule/delete',CompaniesController.scheduleDelete);
 routesAuth.put('/companies/update',CompaniesController.updateData);
 routesAuth.post('/companies/denounces/point',DenouncesController.companyDenounce);
