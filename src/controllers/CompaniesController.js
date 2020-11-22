@@ -68,6 +68,7 @@ module.exports = {
               cnpj, 
               passwordInput, 
               collector,
+              urlSchedule,
               country,
               city,
               region,
@@ -118,6 +119,12 @@ module.exports = {
             latitude, 
             longitude
         });
+        if(urlSchedule !== undefined){
+            await connection('company_url').insert({
+                company_id: id,
+                url: urlSchedule
+            });
+        }   
 
         return response.json({
             welcome: `Bem vindo: ${name}`,
@@ -164,6 +171,7 @@ module.exports = {
         if (companyCollector) {
             await connection('schedule').where('company_collector_id', companyIdBD.id).delete();
         }
+        await connection('company_url').where('company_id',companyIdBD.id).delete();
         await connection('feedback').where('company_id',companyIdBD.id).delete();
         await connection('uploads').where('company_id', companyIdBD.id).delete();
         await connection('schedule').where('company_id', companyIdBD.id).delete();
@@ -316,7 +324,18 @@ module.exports = {
         const idArray = companyFind.map(function (item){
             return item.id;
         });
-        
+
+        const urlScheduleFind = await connection('company_url').select('*');
+        const urlSchedule = ImagesOrganize(idArray,urlScheduleFind);
+
+        const urlFilter = urlSchedule.map(function (item){
+            for(let x of item){
+                if(x !== undefined){
+                    return(x);
+                }
+            }
+        });
+
         const images = ImagesOrganize(idArray,imageFind);
         const imagesFilter = images.map(function (item){
             for(let x of item){
@@ -325,7 +344,7 @@ module.exports = {
                 }
             }
         });
-        return response.json({companyFind,imagesFilter});
+        return response.json({companyFind,urlFilter,imagesFilter});
 
 
     },
