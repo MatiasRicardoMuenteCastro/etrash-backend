@@ -187,7 +187,6 @@ module.exports = {
 				   });
 				   return discartFilter;
 		   });
-		   console.log(avatarPoints)
 		      return res.json({foundPoints, avatar: avatarPoints});
 		  }
 		// case the filter return empty array
@@ -196,6 +195,7 @@ module.exports = {
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
 	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+				  console.log(pointUpload)
 			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 					if(pointUpload.point_id == discarts.id){
 						   const avatar = pointUpload.url;
@@ -206,7 +206,6 @@ module.exports = {
 			   });
 			   return discartFilter;
 	   });
-	   console.log(avatarPoints)
        return res.json({discartPointsDB, avatar: avatarPoints});
 	}	
 
