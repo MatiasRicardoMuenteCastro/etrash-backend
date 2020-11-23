@@ -190,7 +190,7 @@ module.exports = {
 		   const undefinedFilter = avatarPoints.map(function(item){
 			for(let x of item){
 				if(x !== undefined){
-					return x;
+					console.log(x);
 				}
 			}
 		});
@@ -215,7 +215,7 @@ module.exports = {
    		const undefinedFilter = avatarPoints.map(function(item){
 			for(let x of item){
 				if(x !== undefined){
-					return x;
+					console.log(x);
 				}
 			}
 		});
