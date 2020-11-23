@@ -180,7 +180,6 @@ module.exports = {
 				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
 							   const avatar = pointUpload.url;
-							   console.log(avatar);
 							   return avatar;
 						   }
 					
@@ -194,18 +193,17 @@ module.exports = {
 	   }
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
-	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
-				  console.log(pointUpload)
-			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
-					if(pointUpload.point_id == discarts.id){
-						   const avatar = pointUpload.url;
-						   console.log(avatar)
-	   					return avatar;
-					   }
-				
-			   });
-			   return discartFilter;
-	   });
+	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+		   console.log(pointUpload);
+		const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+				if(pointUpload.point_id == discarts.id){
+					   const avatar = pointUpload.url;
+					   return avatar;
+				   }
+			
+		   });
+		   return discartFilter;
+   });
        return res.json({discartPointsDB, avatar: avatarPoints});
 	}	
 
