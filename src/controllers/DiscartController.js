@@ -186,6 +186,7 @@ module.exports = {
 				   });
 				   return discartFilter;
 		   });
+		   console.log(avatarPoints)
 		      return res.json({foundPoints, avatar: avatarPoints});
 		  }
 		// case the filter return empty array
@@ -204,6 +205,7 @@ module.exports = {
 			   });
 			   return discartFilter;
 	   });
+	   console.log(avatarPoints)
        return res.json({discartPointsDB, avatar: avatarPoints});
 	}	
 
