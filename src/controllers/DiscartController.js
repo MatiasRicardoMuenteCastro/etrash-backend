@@ -176,7 +176,6 @@ module.exports = {
 				
 	          // response for result of search
 			  const avatarPointsUpload = await connection('uploads').select('*');
-			  console.log(avatarPointsUpload);
 	  		const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
 				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
@@ -196,7 +195,6 @@ module.exports = {
 	   }
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
-	   console.log(avatarPointsUpload)
 	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
 			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 					if(pointUpload.point_id == discarts.id){
