@@ -203,6 +203,7 @@ module.exports = {
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
 	   const avatarPoints = avatarPointsUpload.map(function(pointUpload){
+		   console.log('a');
 		const discartFilter = discartPointsDB.map(function(discarts){ 
 				if(pointUpload.point_id == discarts.id){
 					   const avatar = pointUpload.url;
