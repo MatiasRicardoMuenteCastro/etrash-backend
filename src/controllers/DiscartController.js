@@ -178,7 +178,6 @@ module.exports = {
 			  const avatarPointsUpload = await connection('uploads').select('*');
 			  console.log(avatarPointsUpload);
 	  		const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
-				  console.log(avatarPoints)
 				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
 							   const avatar = pointUpload.url;
@@ -199,7 +198,6 @@ module.exports = {
 	   const avatarPointsUpload = await connection('uploads').select('*');
 	   console.log(avatarPointsUpload)
 	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
-				  console.log(avatarPoints)
 			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 					if(pointUpload.point_id == discarts.id){
 						   const avatar = pointUpload.url;
