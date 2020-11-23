@@ -180,7 +180,6 @@ module.exports = {
 				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
 							   const avatar = pointUpload.url;
-							   console.log(avatar)
 							   return avatar;
 						   }
 					
@@ -199,7 +198,6 @@ module.exports = {
 			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 					if(pointUpload.point_id == discarts.id){
 						   const avatar = pointUpload.url;
-						   console.log(avatar)
 	   					return avatar;
 					   }
 				
