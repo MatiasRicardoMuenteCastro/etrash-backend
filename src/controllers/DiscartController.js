@@ -176,8 +176,8 @@ module.exports = {
 				
 	          // response for result of search
 			  const avatarPointsUpload = await connection('uploads').select('*');
-	  		const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
-				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+	  		const avatarPoints = avatarPointsUpload.map(function(pointUpload){
+				const discartFilter = discartPointsDB.map(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
 							   const avatar = pointUpload.url;
 							   return avatar;
@@ -186,16 +186,24 @@ module.exports = {
 				   });
 				   return discartFilter;
 		   });
-		      return res.json({foundPoints, avatar: avatarPoints});
+
+		   const undefinedFilter = avatarPoints.map(function(item){
+			for(let x of item){
+				if(x !== undefined){
+					return x;
+				}
+			}
+		});
+
+		      return res.json({foundPoints, avatar: undefinedFilter});
 		  }
 		// case the filter return empty array
 		return res.status(400).json({error: 'Nenhum ponto de coleta encontrado'});
 	   }
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
-	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
-		   console.log(pointUpload);
-		const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+	   const avatarPoints = avatarPointsUpload.map(function(pointUpload){
+		const discartFilter = discartPointsDB.map(function(discarts){ 
 				if(pointUpload.point_id == discarts.id){
 					   const avatar = pointUpload.url;
 					   return avatar;
@@ -204,7 +212,14 @@ module.exports = {
 		   });
 		   return discartFilter;
    });
-       return res.json({discartPointsDB, avatar: avatarPoints});
+   		const undefinedFilter = avatarPoints.map(function(item){
+			for(let x of item){
+				if(x !== undefined){
+					return x;
+				}
+			}
+		});
+       return res.json({discartPointsDB, avatar: undefinedFilter});
 	}	
 
 };
