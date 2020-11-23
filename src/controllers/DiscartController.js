@@ -176,8 +176,8 @@ module.exports = {
 				
 	          // response for result of search
 			  const avatarPointsUpload = await connection('uploads').select('*');
-	  		const avatarPoints = avatarPointsUpload.map(function(pointUpload){
-				const discartFilter = discartPointsDB.map(function(discarts){ 
+	  		const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+				const [discartFilter] = discartPointsDB.filter(function(discarts){ 
 						if(pointUpload.point_id == discarts.id){
 							   const avatar = pointUpload.url;
 							   return avatar;
@@ -186,41 +186,25 @@ module.exports = {
 				   });
 				   return discartFilter;
 		   });
-
-		   const undefinedFilter = avatarPoints.map(function(item){
-			for(let x of item){
-				if(x !== undefined){
-					console.log(x);
-				}
-			}
-		});
-
-		      return res.json({foundPoints, avatar: undefinedFilter});
+		      return res.json({foundPoints, avatar: avatarPoints});
 		  }
 		// case the filter return empty array
 		return res.status(400).json({error: 'Nenhum ponto de coleta encontrado'});
 	   }
 	   // case the discarts of user return total Match with point discarts
 	   const avatarPointsUpload = await connection('uploads').select('*');
-	   const avatarPoints = avatarPointsUpload.map(function(pointUpload){
-		   console.log('a');
-		const discartFilter = discartPointsDB.map(function(discarts){ 
-				if(pointUpload.point_id == discarts.id){
-					   const avatar = pointUpload.url;
-					   return avatar;
-				   }
-			
-		   });
-		   return discartFilter;
-   });
-   		const undefinedFilter = avatarPoints.map(function(item){
-			for(let x of item){
-				if(x !== undefined){
-					console.log(x);
-				}
-			}
-		});
-       return res.json({discartPointsDB, avatar: undefinedFilter});
+	   
+	   	   const avatarPoints = avatarPointsUpload.filter(function(pointUpload){
+			const [discartFilter] = discartPointsDB.filter(function(discarts){ 
+					if(pointUpload.point_id == discarts.id){
+						   const avatar = pointUpload.url;
+	   					return avatar;
+					   }
+				
+			   });
+			   return discartFilter;
+	   });
+       return res.json({discartPointsDB, avatar: avatarPoints});
 	}	
 
 };
