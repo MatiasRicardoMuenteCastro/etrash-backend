@@ -130,6 +130,10 @@ module.exports = {
 				return res.status(401).json({error:"Usuario não encontrado"});
 			}
 
+			if(name === "" && email === "" && country === "" && city === "" && region === ""){
+				return res.status(401).json({error: "Preencha algum desses campos, para eles serem atualizados."});
+			}
+
 			const userFields = [name,email,country,city,region,latitude,longitude];
 
 		 	const items = userFields.map(function(item){

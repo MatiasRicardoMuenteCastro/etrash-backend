@@ -168,6 +168,10 @@ module.exports = {
 			if(!pointIDDB){
 				return res.status(401).json({error:"Usuario não encontrado"});
 			}
+            
+            if(name === "" && email === "" && street === "" & country === "" && city === "" && region === ""){
+				return res.status(401).json({error: "Preencha algum desses campos, para eles serem atualizados."});
+			}
 
 			const pointFields = [name,email,street,number,country,city,region,latitude,longitude];
 
