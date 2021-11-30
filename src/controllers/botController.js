@@ -7,7 +7,7 @@ const assistant = new AssistantV1({
   version: '2020-04-01',
   authenticator: new BasicAuthenticator({
     username: 'apikey',
-    password: '6agMhFUrxXswRZpTgqaoc1WDjK1klo81uv8J4r-6Frwq',
+    password: 'JBGG7tU1sTEOU95kj_MSuqPfam0NefcL6wAt-ol7xBGm',
   }),
   url: process.env.ASSISTANT_URL
 });
